@@ -2,15 +2,25 @@ class kanban():
 
     cols = []
 
-    def __init__(self):
-        print("Hello")
+    # def __init__(self):
+    #     print("Hello")
+
+    def list(self):
+        for col in eval("self.cols"):
+            print(col)
+            for i in range(len(eval("self."+col+".items"))):
+                    print("  " + str(i+1) + ": " + eval("self." + col + ".items["+str(i)+"]"))
+
 
     def addCol(self, colName):
         exec("self." + colName + "=self.column()")
         self.cols.append(colName)
 
+
+
+
     def addItem(self, colName, itemName):
-        exec("self."+colName+".items.append("+itemName+")")
+        exec("self."+colName+".items.append('"+itemName+"')")
 
 
     class column():
@@ -38,8 +48,11 @@ class kanban():
 def main():
     kan=kanban()
     kan.addCol("ToDo")
-    print(kan.cols)
-    print(kan.ToDo.items)
+    kan.addCol("Next")
+    kan.addItem("ToDo","Jump")
+
+    kan.list()
+
 
 
 if __name__=="__main__":
