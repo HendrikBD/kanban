@@ -2,8 +2,6 @@ class kanban():
 
     cols = []
 
-    # def __init__(self):
-    #     print("Hello")
 
     def list(self):
         for col in eval("self.cols"):
@@ -17,10 +15,19 @@ class kanban():
         self.cols.append(colName)
 
 
-
-
     def addItem(self, colName, itemName):
         exec("self."+colName+".items.append('"+itemName+"')")
+
+
+    def removeItem(self, colNum, itemNum):
+        print(eval("self." + self.cols[colNum-1] + ".items[" + str(itemNum-1) + "]"))
+        del eval("self." + self.cols[colNum-1] + ".items")[itemNum-1]
+
+
+    def moveItem(self, colFrom, itemNum, colTo):
+        self.addItem(self.cols[colTo-1], eval("self." + self.cols[colFrom-1] + ".items[" + str(itemNum-1) + "]"))
+        self.removeItem(colFrom, itemNum)
+        self.list()
 
 
     class column():
@@ -28,21 +35,9 @@ class kanban():
         def __init__(self):
             self.items = []
 
-        # def addItem(self, itemName)
 
-    # def list(self):
-    # def addItem(self):
-    # def moveItem(self):
-    # def addColumn(self):
-    #
-# class column(kanban):
-#     # def __init__(self):
-#     #     print('Hello World!')
-#     val2=0
-#
-#     def test(self):
-#         print("World")
-#
+    # organize output
+    # add as command
 
 
 def main():
@@ -52,7 +47,12 @@ def main():
     kan.addItem("ToDo","Jump")
 
     kan.list()
+    print("")
+    kan.moveItem(1,1,2)
+    # print(kan.ToDo.items)
+    # kan.removeItem(1,1)
 
+    # kan.list()
 
 
 if __name__=="__main__":
