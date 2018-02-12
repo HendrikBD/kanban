@@ -1,10 +1,56 @@
+
+Initial Categories:
+  - ToDo
+  - Plan
+  - Do
+  - Done
+
+
 Database structure:
+  
+  Tables:
+    Kanbans - will list multiple distinctive kanbans, will start with single kanban
+        Includes: id, date created, title, and is active (whether it is set as main)
+
+    Categories - the columns of a kanban board describing each items status
+        Includes: id, kanban id, column name
+
+    Items
+        Includes: id, kanban id, column id, item name, priority (ToBe: origin, event trigger)
+
+
+
+Possible categories:
+  - todo
+  - planning solution
+  - build
+  - test 
+  - deploy
+  - pending
+  - research
+  - validate
+
+Commnds(toBe):
+  kanban ls - list
+  kanban -a To-Do item - advance item
+  kanban add new-item
+      - how to best specify all fields?
+      - have defaults,
+  kanban -p To-Do item <new-priority>
+  kanban pending 
+      - show pending kanbans and what triggers them
+      - contained at the process which will have the info of when to trigger
+      - the trigger could be a trigger to the local process, or a foreign one
+          - contained in function call info
+
+
+Index
 
   Kanban table - lists all available kanbans, contains id, time created & name
       - how to track which is active? How to change? Active column?
       - for now, just start with one
       - id, name, time created
-  
+
   Column table - lists all the kaban columns (todo, next...)
       - each references the kanban it belongs to
       - either: one standard table, or one for each kanban
@@ -18,29 +64,6 @@ Database structure:
       - id, item, priority, event triggers, origin
       - must be fomrattable into a kanban card
 
-
-Categories:
-  - todo
-  - planning solution
-  - build
-  - test 
-  - deploy
-  - pending
-  - research
-  - validate
-
-commnds:
-  kanban ls - list
-  kanban -a To-Do item - advance item
-  kanban add new-item
-      - how to best specify all fields?
-      - have defaults,
-  kanban -p To-Do item <new-priority>
-  kanban pending 
-      - show pending kanbans and what triggers them
-      - contained at the process which will have the info of when to trigger
-      - the trigger could be a trigger to the local process, or a foreign one
-          - contained in function call info
 
 Kanban:
 
@@ -75,6 +98,8 @@ Future additions:
   Automated process test?
     - is there anything worthwhile to try out? RSS feed?
   Triggers - when a kanban is complete execute a function
+  Links from item to notes/files
+  Nested Kanbans?
   Librarian with kanban - save and organize bookmarks, papers and general information
       - new info added = new kanban card
       - upon receiving, librarian plans where to organize
