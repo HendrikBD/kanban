@@ -1,11 +1,10 @@
 import sqlite3
 import time
 import datetime
-import random
 
 
 # Defines the database as a file at the specified location (.db)
-conn = sqlite3.connect('data.db')
+conn = sqlite3.connect('kan.db')
 
 # create a cursor, which points to a specific place in the database
 c = conn.cursor()
@@ -16,25 +15,24 @@ def create_table():
     c.execute('CREATE TABLE IF NOT EXISTS stuff(unix REAL, datestamp TEXT, \
                   keyword TEXT, value REAL)')
 
+
 def load(data):
+    data = (42, [40, 41, 42, 43], "ToDoKan",
+            ['ToDoKan', 'PlanKan', 'DoingKan', 'DoneKan'],
+            [51, 52], ['Do one thing', 'Do another'], [5, 6],
+            [53, 54], ['Hello?', 'World'], [5, 6],
+            [55, 56], ['Why?', 'Me?'], [5, 6],
+            [57, 58], ['Goodbye?', 'all'], [5, 6])
     print("Loading")
+    print(data)
+    return data
+
 
 def data_entry():
     c.execute("INSERT INTO stuff VALUES(145, '2018-02-05', 'Python', 5)")
     conn.commit()
     c.close()
     conn.close()  # Stops memory from being used for the connection
-
-
-def dynamic_data_entry():
-    unix = time.time()
-    date = str(datetime.datetime.fromtimestamp(unix).strftime('%Y-%m-%d %H:%M:'
-                                                              '%S'))
-    keyword = 'Python'
-    value = random.randrange(0, 10)
-    c.execute('INSERT INTO stuff (unix, datestamp, keyword, value) VALUES (?, '
-              '?, ?, ?)', (unix, date, keyword, 2))
-    conn.commit()
 
 
 def read_from_db():
@@ -54,15 +52,5 @@ def sqlite_delete():
     # conn.commit()
 
 
-# create_table()
-# data_entry()
-for i in range(10):
-    dynamic_data_entry()
-    time.sleep(1)
-# read_from_db()
-# print(79*"#")
-# sqlite_update()
-sqlite_delete()
-# read_from_db()
 c.close()
 conn.close()
