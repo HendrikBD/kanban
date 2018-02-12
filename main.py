@@ -1,11 +1,16 @@
+import seed
+import db
+
+
 class Kanban():
 
     cols = []
     kanbanId = 0
 
     def __init__(self):
+        self.parse(db.load('ToDo'))
         print('hello?')
-        #  Load column categories from db
+        #  Load column categories from db function
 
     def list(self):
         for col in eval("self.cols"):
@@ -14,6 +19,9 @@ class Kanban():
                     print("  " + str(i+1) + ": " + eval("self." + col +
                                                         ".items["+str(i)+"]"))
             #  List, optimized for terminal/general purpose
+
+    def parse(self, data):
+        print('Parsing')
 
     def addCol(self, colName):
         exec("self." + colName + "=self.column()")

@@ -16,6 +16,8 @@ def create_table():
     c.execute('CREATE TABLE IF NOT EXISTS stuff(unix REAL, datestamp TEXT, \
                   keyword TEXT, value REAL)')
 
+def load(data):
+    print("Loading")
 
 def data_entry():
     c.execute("INSERT INTO stuff VALUES(145, '2018-02-05', 'Python', 5)")
