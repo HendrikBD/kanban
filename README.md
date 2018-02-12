@@ -7,7 +7,7 @@ Initial Categories:
 
 
 Database structure:
-  
+
   Tables:
     Kanbans - will list multiple distinctive kanbans, will start with single kanban
         Includes: id, date created, title, and is active (whether it is set as main)
@@ -24,7 +24,7 @@ Possible categories:
   - todo
   - planning solution
   - build
-  - test 
+  - test
   - deploy
   - pending
   - research
@@ -41,7 +41,7 @@ Commnds(toBe):
       - how to best specify all fields?
       - have defaults,
   kanban -p To-Do item <new-priority>
-  kanban pending 
+  kanban pending
       - show pending kanbans and what triggers them
       - contained at the process which will have the info of when to trigger
       - the trigger could be a trigger to the local process, or a foreign one
