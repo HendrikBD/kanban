@@ -30,6 +30,10 @@ Possible categories:
   - research
   - validate
 
+
+Implementation Notes
+  - use INTEGER PRIMARY KEY AUTORINCREMENT for primary key
+
 Commnds(toBe):
   kanban ls - list
   kanban -a To-Do item - advance item
