@@ -6,13 +6,24 @@ import seed
 
 class Db():
 
-    # def __init__(self):
-        #  On initialization, connect to local db
+    isConnected = False
 
     # Creates a table called stuff with the columns as listed
     def create_table(self):
         self.cursor.execute('CREATE TABLE IF NOT EXISTS stuff(unix REAL,\
                             datestamp TEXT, keyword TEXT, value REAL)')
+
+    @classmethod
+    def openConn(cls):
+        cls.conn = sqlite3.connect('kan.db')
+        cls.cursor = cls.conn.cursor()
+        cls.isConnected = True
+
+    @classmethod
+    def closeConn(cls):
+        cls.cursor.close()
+        cls.conn.close()
+        cls.isConnected = False
 
     @classmethod
     def read(cls):
@@ -34,19 +45,29 @@ class Db():
         return data
 
     @classmethod
-    def openConn(cls):
-        cls.conn = sqlite3.connect('kan.db')
-        cls.cursor = cls.conn.cursor()
+    def addItem(cls, colId, todo, priority=5):
+        if(not cls.isConnected):
+            cls.openConn()
+        cls.cursor.execute('INSERT INTO items (colId, kanId, todo, priority)'
+                           ' VALUES (?, ?, ?, ?)', (colId, 1, todo, priority))
+        cls.conn.commit()
+        cls.closeConn()
 
     @classmethod
-    def closeConn(cls):
-        cls.cursor.close()
-        cls.conn.close()
+    def moveItem(cls, colId, rowNum, newColId):
+        cls.openConn()
+        try:
+            cls.cursor.execute('SELECT * FROM items WHERE colId = ?', (colId,))
+            cls.addItem(newColId, cls.cursor.fetchall()[rowNum-1][3])
+            cls.deleteItem(colId, rowNum)
+        except IndexError:
+            print("That item does not exist!")
 
     @classmethod
     def deleteItem(cls, colId, rowNum):
         print('deleting', str(colId), '-', str(rowNum))
-        cls.openConn()
+        if(not cls.isConnected):
+            cls.openConn()
         cls.cursor.execute('SELECT * FROM items WHERE colId = ?', (colId,))
         try:
             data = cls.cursor.fetchall()[rowNum-1]
@@ -57,23 +78,19 @@ class Db():
             print("Item does not exist!\n")
         cls.closeConn()
 
-    @classmethod
-    def addItem(cls, colId, todo, priority=5):
-        cls.openConn()
-        cls.cursor.execute('INSERT INTO items (colId, kanId, todo, priority)'
-                           ' VALUES (?, ?, ?, ?)', (colId, 1, todo, priority))
-        cls.conn.commit()
-
 
 def main():
     seed.main()
     data = Db.read()
     print(data)
-    Db.addItem('hello', 6)
+
+    Db.moveItem(1, 1, 4)
 
     data = Db.read()
     print(data)
-    # Db.deleteItem(2, 3)
+    Db.deleteItem(4, 2)
+    data = Db.read()
+    print(data)
 
 
 if __name__ == "__main__":
