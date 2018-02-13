@@ -1,27 +1,33 @@
 import seed
-import db
+from db import Db
 
 
 class Kanban():
 
-    cols = []
-    kanbanId = 0
-
     def __init__(self):
-        self.parse(db.load('ToDo'))
-        print('hello?')
-        #  Load column categories from db function
+        data = Db.read()
+        self.parse(data)
 
     def list(self):
         for col in eval("self.cols"):
             print(col)
-            for i in range(len(eval("self."+col+".items"))):
-                    print("  " + str(i+1) + ": " + eval("self." + col +
-                                                        ".items["+str(i)+"]"))
+            # for i in range(len(eval("self."+col+".items"))):
+            #         print("  " + str(i+1) + ": " + eval("self." + col +
+            #                                             ".items["+str(i)+"]"))
             #  List, optimized for terminal/general purpose
 
     def parse(self, data):
         print('Parsing')
+        self.table = []
+        self.columns = []
+        self.kanId = data[0][0][0]
+        self.name = data[0][0][1]
+
+        for col in data[1]:
+            self.table.append((col[2], col[0], []))
+
+        for item in data[2]:
+            self.table[item[2]-1][2].append(item[3])
 
     def addCol(self, colName):
         exec("self." + colName + "=self.column()")
@@ -47,21 +53,16 @@ class Kanban():
         self.list()
         #  Change db foreign key (column id)
 
-    class column():
-
-        colId = 0
-
-        def __init__(self):
-            self.items = []
-            #  Load items from db
-            #  add item as method
+    def __exit__(self, exc_type, exc_value, traceback):
+        print('Goodbye')
 
 
 def main():
-    #  Seed db suggested structure (first drop, then seed new data)
+    seed.main()
     #  Display kanban & list items
     kan = Kanban()
-    kan.list()
+    print(kan.table)
+    # kan.list()
 
 
 if __name__ == "__main__":
