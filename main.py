@@ -21,7 +21,7 @@ class Kanban():
             numItems = len(col[1])
             maxRow = numItems if numItems > maxRow else maxRow
 
-        for i in range(0, maxRow):
+        for i in range(0, min(10, maxRow)):
             out = out + '\n'
             for col in self.table:
                 if(i < len(col[1])):
@@ -49,8 +49,8 @@ class Kanban():
         self.cols.append(colName)
         #  Add new category to tables with kanban id
 
-    def addItem(self, colName, itemName):
-        exec("self."+colName+".items.append('"+itemName+"')")
+    def addItem(self, colNum, todo):
+        Db.addItem(colNum, todo)
         #  Add to item table with column & kanban id
         #  Separate kanban item tables, but all columns incl in 1 table
 
@@ -73,6 +73,11 @@ def main():
     seed.main()
     #  Display kanban & list items
     kan = Kanban()
+    kan.printOut()
+    for i in range(0,20):
+        kan.addItem(2, 'Test')
+    kan.addItem(2, 'Test Again')
+    kan.addItem(4, 'Test Again Again')
     kan.printOut()
 
 

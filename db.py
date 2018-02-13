@@ -44,39 +44,36 @@ class Db():
         cls.conn.close()
 
     @classmethod
-    def delete(cls, colId, rowNum):
+    def deleteItem(cls, colId, rowNum):
         print('deleting', str(colId), '-', str(rowNum))
         cls.openConn()
         cls.cursor.execute('SELECT * FROM items WHERE colId = ?', (colId,))
         try:
             data = cls.cursor.fetchall()[rowNum-1]
-            cls.cursor.execute('DELETE FROM items WHERE itemId = ?', (data[0],))
+            cls.cursor.execute('DELETE FROM items WHERE itemId = ?',
+                               (data[0],))
             cls.conn.commit()
-        except IndexError as e:
+        except IndexError:
             print("Item does not exist!\n")
         cls.closeConn()
 
-
-# def data_entry(conconnn):
-#     c.execute("INSERT INTO stuff VALUES(145, '2018-02-05', 'Python', 5)")
-#     conn.commit()
-#     c.close()
-#     conn.close()  # Stops memory from being used for the connection
-# def sqlite_update():
-#     c.execute('SELECT * FROM stuff')
-#     c.execute('Update stuff SET value = 99 WHERE value=8')
-#     conn.commit()
+    @classmethod
+    def addItem(cls, colId, todo, priority=5):
+        cls.openConn()
+        cls.cursor.execute('INSERT INTO items (colId, kanId, todo, priority)'
+                           ' VALUES (?, ?, ?, ?)', (colId, 1, todo, priority))
+        cls.conn.commit()
 
 
 def main():
     seed.main()
     data = Db.read()
     print(data)
-
-    Db.delete(2, 3)
+    Db.addItem('hello', 6)
 
     data = Db.read()
     print(data)
+    # Db.deleteItem(2, 3)
 
 
 if __name__ == "__main__":
