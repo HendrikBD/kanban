@@ -43,6 +43,20 @@ class Db():
         cls.cursor.close()
         cls.conn.close()
 
+    @classmethod
+    def delete(cls, colId, rowNum):
+        print('deleting', str(colId), '-', str(rowNum))
+        cls.openConn()
+        cls.cursor.execute('SELECT * FROM items WHERE colId = ?', (colId,))
+        try:
+            data = cls.cursor.fetchall()[rowNum-1]
+            cls.cursor.execute('DELETE FROM items WHERE itemId = ?', (data[0],))
+            cls.conn.commit()
+        except IndexError as e:
+            print("Item does not exist!\n")
+        cls.closeConn()
+
+
 # def data_entry(conconnn):
 #     c.execute("INSERT INTO stuff VALUES(145, '2018-02-05', 'Python', 5)")
 #     conn.commit()
@@ -52,15 +66,15 @@ class Db():
 #     c.execute('SELECT * FROM stuff')
 #     c.execute('Update stuff SET value = 99 WHERE value=8')
 #     conn.commit()
-#
-# def sqlite_delete():
-#     c.execute('SELECT * FROM stuff WHERE value = 2')
-#     print(len(c.fetchall()))
-#     # conn.commit()
 
 
 def main():
     seed.main()
+    data = Db.read()
+    print(data)
+
+    Db.delete(2, 3)
+
     data = Db.read()
     print(data)
 
