@@ -6,39 +6,42 @@ import datetime
 
 class Db():
 
-    # cursor = []
-
-    def __init__(self):
-        # Defines the database as a file at the specified location (.db)
-        self.conn = sqlite3.connect('kan.db')
-
-        # create a cursor, which points to a specific place in the database
-        self.cursor = self.conn.cursor()
+    # def __init__(self):
+        #  On initialization, connect to local db
 
     # Creates a table called stuff with the columns as listed
     def create_table(self):
         self.cursor.execute('CREATE TABLE IF NOT EXISTS stuff(unix REAL,\
                             datestamp TEXT, keyword TEXT, value REAL)')
 
-    def read(self):
-        self.cursor.execute('SELECT * FROM kanbans')
-        kanTbl = self.cursor.fetchall()
+    @classmethod
+    def read(cls):
+        cls.openConn()
+        cls.cursor.execute('SELECT * FROM kanbans')
+        kanTbl = cls.cursor.fetchall()
 
-        self.cursor.execute('SELECT * FROM columns WHERE kanId = ?',
-                            (kanTbl[0][0],))
-        colTbl = self.cursor.fetchall()
+        cls.cursor.execute('SELECT * FROM columns WHERE kanId = ?',
+                           (kanTbl[0][0],))
+        colTbl = cls.cursor.fetchall()
 
-        self.cursor.execute('SELECT * FROM items WHERE kanId = ?', (1,))
-        itemTbl = self.cursor.fetchall()
+        cls.cursor.execute('SELECT * FROM items WHERE kanId = ?', (1,))
+        itemTbl = cls.cursor.fetchall()
 
         data = (kanTbl, colTbl, itemTbl)
 
+        cls.closeConn()
         print("Loading")
         return data
 
-    def close(self):
-        self.cursor.close()
-        self.conn.close()
+    @classmethod
+    def openConn(cls):
+        cls.conn = sqlite3.connect('kan.db')
+        cls.cursor = cls.conn.cursor()
+
+    @classmethod
+    def closeConn(cls):
+        cls.cursor.close()
+        cls.conn.close()
 
 # def data_entry(conconnn):
 #     c.execute("INSERT INTO stuff VALUES(145, '2018-02-05', 'Python', 5)")
@@ -55,12 +58,11 @@ class Db():
 #     print(len(c.fetchall()))
 #     # conn.commit()
 
+
 def main():
     seed.main()
-    db = Db()
-    data = db.read()
+    data = Db.read()
     print(data)
-    db.close()
 
 
 if __name__ == "__main__":
