@@ -1,9 +1,9 @@
 import sqlite3
 import time
 
+tables = ['kanbans', 'columns', 'items']
 conn = sqlite3.connect('kan.db')
 curs = conn.cursor()
-tables = ['kanbans', 'columns', 'items']
 
 
 def seed():
@@ -38,7 +38,8 @@ def seed():
     curs.execute("INSERT INTO items (colId, kanId, todo, priority) VALUES "
                  "(3, 1, 'Do Nothing', 5)")
 
-    print('Created db')
+    conn.commit()
+    print('Tables have been seeded and commited!', end='\n\n')
 
 
 def createTable():
@@ -72,13 +73,9 @@ def checkTables():
 def main():
     dropTables()
     seed()
-    checkTables()
-    # curs.execute('SELECT name FROM sqlite_master WHERE type="table" AND \
-    #              name="kanbans"')
-    # print(curs.fetchall(), sep='')
-
-    # curs.close()
-    # conn.close()
+    # checkTables()
+    curs.close()
+    conn.close()
 
 
 if __name__ == "__main__":

@@ -33,6 +33,8 @@ Possible categories:
 
 Implementation Notes
   - use INTEGER PRIMARY KEY AUTORINCREMENT for primary key
+  - Tuple Parsing Structure:
+      (kanId, catIds, kanName, cats, catItemIds1, catItems1, itemPriority1, ...)
 
 Commnds(toBe):
   kanban ls - list
