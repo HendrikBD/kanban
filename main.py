@@ -1,4 +1,5 @@
 import seed
+import math
 from db import Db
 
 
@@ -8,26 +9,36 @@ class Kanban():
         data = Db.read()
         self.parse(data)
 
-    def list(self):
-        for col in eval("self.cols"):
-            print(col)
-            # for i in range(len(eval("self."+col+".items"))):
-            #         print("  " + str(i+1) + ": " + eval("self." + col +
-            #                                             ".items["+str(i)+"]"))
-            #  List, optimized for terminal/general purpose
+    def printOut(self):
+        out = ''
+        maxRow = min(10, max([len(col[1]) for col in self.table]))
+
+        for col in self.table:
+            padd = max(0, (19-col[0].__len__())/2)
+            out += math.floor(padd)*' ' + col[0] + math.ceil(padd)*' '
+
+        for i in range(0, maxRow):
+            out = out + '\n'
+            for col in self.table:
+                if(i < len(col[1])):
+                    padd = max(0, (19-col[1][i].__len__())/2)
+                    out += math.floor(padd)*' ' + col[1][i][0:19]\
+                        + math.ceil(padd)*' '
+                else:
+                    out += 19*' '
+        print(out)
 
     def parse(self, data):
-        print('Parsing')
+        print('Parsing\n')
         self.table = []
-        self.columns = []
         self.kanId = data[0][0][0]
         self.name = data[0][0][1]
 
         for col in data[1]:
-            self.table.append((col[2], col[0], []))
+            self.table.append((col[2], []))
 
         for item in data[2]:
-            self.table[item[2]-1][2].append(item[3])
+            self.table[item[2]-1][1].append(item[3])
 
     def addCol(self, colName):
         exec("self." + colName + "=self.column()")
@@ -53,16 +64,12 @@ class Kanban():
         self.list()
         #  Change db foreign key (column id)
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        print('Goodbye')
-
 
 def main():
     seed.main()
     #  Display kanban & list items
     kan = Kanban()
-    print(kan.table)
-    # kan.list()
+    kan.printOut()
 
 
 if __name__ == "__main__":
