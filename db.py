@@ -7,6 +7,7 @@ import seed
 class Db():
 
     isConnected = False
+    stillActive = False
 
     # Creates a table called stuff with the columns as listed
     def create_table(self):
@@ -51,21 +52,24 @@ class Db():
         cls.cursor.execute('INSERT INTO items (colId, kanId, todo, priority)'
                            ' VALUES (?, ?, ?, ?)', (colId, 1, todo, priority))
         cls.conn.commit()
-        cls.closeConn()
+        if(not cls.stillActive):
+            cls.closeConn()
 
     @classmethod
     def moveItem(cls, colId, rowNum, newColId):
         cls.openConn()
+        cls.stillActive = True
         try:
             cls.cursor.execute('SELECT * FROM items WHERE colId = ?', (colId,))
             cls.addItem(newColId, cls.cursor.fetchall()[rowNum-1][3])
             cls.deleteItem(colId, rowNum)
         except IndexError:
             print("That item does not exist!")
+        cls.stillActive = False
+        cls.closeConn()
 
     @classmethod
     def deleteItem(cls, colId, rowNum):
-        print('deleting', str(colId), '-', str(rowNum))
         if(not cls.isConnected):
             cls.openConn()
         cls.cursor.execute('SELECT * FROM items WHERE colId = ?', (colId,))
@@ -76,7 +80,9 @@ class Db():
             cls.conn.commit()
         except IndexError:
             print("Item does not exist!\n")
-        cls.closeConn()
+
+        if(not cls.stillActive):
+            cls.closeConn()
 
 
 def main():
