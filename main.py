@@ -33,6 +33,7 @@ class Kanban():
         print(out)
 
     def parse(self, data):
+        #  Parse data from db into object
         print('Parsing\n')
         self.table = []
         self.kanId = data[0][0][0]
@@ -44,29 +45,18 @@ class Kanban():
         for item in data[2]:
             self.table[item[2]-1][1].append(item[3])
 
-    def addCol(self, colName):
-        exec("self." + colName + "=self.column()")
-        self.cols.append(colName)
-        #  Add new category to tables with kanban id
-
     def addItem(self, colNum, todo):
+        #  Tell Db to append todo to end of specified column
         Db.addItem(colNum, todo)
-        #  Add to item table with column & kanban id
-        #  Separate kanban item tables, but all columns incl in 1 table
 
-    def removeItem(self, colNum, itemNum):
-        print(eval("self." + self.cols[colNum-1] + ".items[" + str(itemNum-1) +
-                   "]"))
-        del eval("self." + self.cols[colNum-1] + ".items")[itemNum-1]
-        #  Remove item from item list
+    def removeItem(self, colNum, rowNum):
+        #  Deleting item based on colNum and rowNum as displayed onscreen
+        Db.deleteItem(colNum, rowNum)
 
-    def moveItem(self, colFrom, itemNum, colTo):
-        self.addItem(self.cols[colTo-1], eval("self." + self.cols[colFrom-1] +
-                                              ".items[" + str(itemNum-1) +
-                                              "]"))
-        self.removeItem(colFrom, itemNum)
-        self.list()
-        #  Change db foreign key (column id)
+    def advItem(self, colNum, rowNum):
+        #  Advance an item to the next column
+        Db.moveItem(colNum, rowNum, colNum+1)
+        print("advancing...")
 
 
 def main():
@@ -74,11 +64,17 @@ def main():
     #  Display kanban & list items
     kan = Kanban()
     kan.printOut()
-    for i in range(0,20):
-        kan.addItem(2, 'Test')
-    kan.addItem(2, 'Test Again')
-    kan.addItem(4, 'Test Again Again')
+    kan.advItem(3, 1)
+    kan.advItem(3, 1)
+    kan = Kanban()
     kan.printOut()
+
+    # for i in range(0,20):
+    #     kan.addItem(2, 'Test')
+    # kan.addItem(2, 'Test Again')
+    # kan.addItem(4, 'Test Again Again')
+    # kan.removeItem(4, 1)
+    # kan.printOut()
 
 
 if __name__ == "__main__":
