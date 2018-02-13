@@ -5,17 +5,21 @@ from db import Db
 
 class Kanban():
 
-    def __init__(self):
+    def load(self):
         data = Db.read()
         self.parse(data)
 
     def printOut(self):
+        self.load()
         out = ''
         maxRow = min(10, max([len(col[1]) for col in self.table]))
+        maxRow = 0
 
         for col in self.table:
             padd = max(0, (19-col[0].__len__())/2)
             out += math.floor(padd)*' ' + col[0] + math.ceil(padd)*' '
+            numItems = len(col[1])
+            maxRow = numItems if numItems > maxRow else maxRow
 
         for i in range(0, maxRow):
             out = out + '\n'
