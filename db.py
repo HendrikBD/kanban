@@ -8,6 +8,7 @@ class Db():
 
     isConnected = False
     stillActive = False
+    kanPath = 'file:/home/bhd/Homebrew/kanban/kan.db'
 
     # Creates a table called stuff with the columns as listed
     def create_table(self):
@@ -16,7 +17,8 @@ class Db():
 
     @classmethod
     def openConn(cls):
-        cls.conn = sqlite3.connect('kan.db')
+        # cls.conn = sqlite3.connect('kan.db')
+        cls.conn = sqlite3.connect(cls.kanPath, uri=True)
         cls.cursor = cls.conn.cursor()
         cls.isConnected = True
 
@@ -42,7 +44,7 @@ class Db():
         data = (kanTbl, colTbl, itemTbl)
 
         cls.closeConn()
-        print("Loading")
+        # print("Loading")
         return data
 
     @classmethod

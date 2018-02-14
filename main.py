@@ -11,7 +11,7 @@ class Kanban():
 
     def printOut(self):
         self.load()
-        out = ''
+        out = '\n'
         maxRow = min(10, max([len(col[1]) for col in self.table]))
         maxRow = 0
 
@@ -20,6 +20,8 @@ class Kanban():
             out += math.floor(padd)*' ' + col[0] + math.ceil(padd)*' '
             numItems = len(col[1])
             maxRow = numItems if numItems > maxRow else maxRow
+
+        out += '\n'
 
         for i in range(0, min(10, maxRow)):
             out = out + '\n'
@@ -30,11 +32,14 @@ class Kanban():
                         + math.ceil(padd)*' '
                 else:
                     out += 19*' '
-        print(out)
+
+        out += '\n'
+        # print(out)
+        return out
 
     def parse(self, data):
         #  Parse data from db into object
-        print('Parsing\n')
+        # print('Parsing\n')
         self.table = []
         self.kanId = data[0][0][0]
         self.name = data[0][0][1]
@@ -60,14 +65,10 @@ class Kanban():
 
 
 def main():
-    seed.main()
+    # seed.main()
     #  Display kanban & list items
     kan = Kanban()
-    kan.printOut()
-    kan.advItem(3, 1)
-    kan.advItem(3, 1)
-    kan = Kanban()
-    kan.printOut()
+    print(kan.printOut())
 
     # for i in range(0,20):
     #     kan.addItem(2, 'Test')
