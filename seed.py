@@ -8,33 +8,23 @@ curs = conn.cursor()
 
 def seed():
     createTable()
-    unix = int(time.time())
-
-    #  Adding kanban
-    curs.execute("INSERT INTO kanbans (name, active, createdate) VALUES \
-                 ('ToDo', 1, ?)", (unix,))
-
-    #  Adding columns
-    curs.execute("INSERT INTO columns (kanId, name) VALUES (1, 'ToDo')")
-    curs.execute("INSERT INTO columns (kanId, name) VALUES (1, 'Plan')")
-    curs.execute("INSERT INTO columns (kanId, name) VALUES (1, 'Doing')")
-    curs.execute("INSERT INTO columns (kanId, name) VALUES (1, 'Done')")
+    initTable()
 
     # Adding items
+    curs.execute("INSERT INTO items (colId, kanId, todo, priority) VALUES "
+                 "(1, 1, 'Some really really long statement. Bro.', 5)")
     curs.execute("INSERT INTO items (colId, kanId, todo, priority) VALUES "
                  "(3, 1, 'That one thing', 5)")
     curs.execute("INSERT INTO items (colId, kanId, todo, priority) VALUES "
                  "(1, 1, 'That other thing', 5)")
     curs.execute("INSERT INTO items (colId, kanId, todo, priority) VALUES "
-                 "(2, 1, 'Something important', 5)")
+                 "(2, 1, 'Something important, but what?', 5)")
     curs.execute("INSERT INTO items (colId, kanId, todo, priority) VALUES "
                  "(1, 1, 'coding', 5)")
     curs.execute("INSERT INTO items (colId, kanId, todo, priority) VALUES "
                  "(4, 1, 'coding', 5)")
     curs.execute("INSERT INTO items (colId, kanId, todo, priority) VALUES "
                  "(1, 1, 'coding', 5)")
-    curs.execute("INSERT INTO items (colId, kanId, todo, priority) VALUES "
-                 "(4, 1, 'codeing', 5)")
     curs.execute("INSERT INTO items (colId, kanId, todo, priority) VALUES "
                  "(3, 1, 'Do Nothing', 5)")
 
@@ -70,10 +60,29 @@ def checkTables():
         print()
 
 
+def initTable():
+    dropTables()
+    createTable()
+    unix = int(time.time())
+
+    #  Adding kanban
+    curs.execute("INSERT INTO kanbans (name, active, createdate) VALUES \
+                 ('ToDo', 1, ?)", (unix,))
+
+    #  Adding columns
+    curs.execute("INSERT INTO columns (kanId, name) VALUES (1, 'ToDo')")
+    curs.execute("INSERT INTO columns (kanId, name) VALUES (1, 'Plan')")
+    curs.execute("INSERT INTO columns (kanId, name) VALUES (1, 'Doing')")
+    curs.execute("INSERT INTO columns (kanId, name) VALUES (1, 'Done')")
+    conn.commit()
+
+
 def main():
     dropTables()
-    seed()
-    # checkTables()
+    initTable()
+
+    # seed()
+    checkTables()
     curs.close()
     conn.close()
 
